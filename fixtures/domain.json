@@ -1,6 +1,6 @@
 {
   "domain": "medical-market-access",
-  "version": 1,
+  "version": 2,
   "sample_id": "record-005",
   "actors": [
     "创新药械企业",
@@ -17,6 +17,503 @@
     "多国注册路径",
     "资料版本与补件",
     "合作机构资质",
-    "上市阶段追踪"
+    "上市阶段追踪",
+    "企业资料按授权隔离",
+    "变更影响自动追踪",
+    "准入判断证据版本稽核"
+  ],
+  "pipeline_stages": [
+    {"id": "lead", "name": "初步接洽", "order": 1, "description": "需求摸底、分类预判与差距分析，尚未向监管机构正式申报"},
+    {"id": "filing", "name": "正式申报", "order": 2, "description": "已受理或已提交，处于技术审评与补件阶段"},
+    {"id": "approved", "name": "获批上市", "order": 3, "description": "已获注册证，进行证书维护、变更与集采对接"},
+    {"id": "in_use", "name": "实际使用", "order": 4, "description": "进入医院或渠道实际使用，开展上市后监测与续证"}
+  ],
+  "countries": [
+    {"id": "TH", "name": "泰国", "regulator": "泰国食品药品监督管理局（Thai FDA）", "label_language": "泰文", "local_agent_required": true},
+    {"id": "VN", "name": "越南", "regulator": "越南卫生部医疗器械与建设局（DMEC）", "label_language": "越南文", "local_agent_required": true},
+    {"id": "ID", "name": "印度尼西亚", "regulator": "印度尼西亚卫生部医疗器械局（MoH Indonesia）", "label_language": "印尼文", "local_agent_required": true}
+  ],
+  "regulations": [
+    {"id": "REG-TH-ACT", "country": "TH", "title": "泰国医疗器械法 B.E.2551（2008）及修订", "citation": "Medical Device Act B.E. 2551", "source_url": "https://www.fda.moph.go.th/sites/Medical/SitePages/law.aspx"},
+    {"id": "REG-TH-CLS", "country": "TH", "title": "泰国医疗器械风险分类规则公告", "citation": "Notification of the Ministry of Public Health re: Risk Classification of Medical Devices", "source_url": "https://www.fda.moph.go.th/sites/Medical/SitePages/classification.aspx"},
+    {"id": "REG-VN-98", "country": "VN", "title": "越南医疗器械管理法令 98/2021/ND-CP", "citation": "Decree 98/2021/ND-CP on Medical Device Management", "source_url": "https://dmec.moh.gov.vn/van-ban-phap-luat"},
+    {"id": "REG-VN-LBL", "country": "VN", "title": "越南医疗器械标签规定（43/2017/ND-CP 及 111/2021/ND-CP）", "citation": "Decree 43/2017/ND-CP as amended by 111/2021/ND-CP on Goods Labeling", "source_url": "https://dmec.moh.gov.vn/van-ban-phap-luat"},
+    {"id": "REG-ID-863", "country": "ID", "title": "印尼卫生部医疗器械流通许可条例 63/2017", "citation": "Permenkes No. 63/2017 on Medical Device Distribution Licensing", "source_url": "https://regalkes.kemkes.go.id"},
+    {"id": "REG-ID-AKL", "country": "ID", "title": "印尼医疗器械注册（AKL）电子申报指南", "citation": "Guideline for Online Registration of Medical Devices (AKL)", "source_url": "https://regalkes.kemkes.go.id"}
+  ],
+  "organizations": [
+    {"id": "org-gx", "type": "service_org", "name": "广西面向东盟药械准入服务中心"},
+    {"id": "org-a", "type": "enterprise", "name": "示例医疗科技（南宁）有限公司"},
+    {"id": "org-b", "type": "enterprise", "name": "同行器械（苏州）有限公司"},
+    {"id": "org-h-nn", "type": "hospital", "name": "广西示例附属医院"},
+    {"id": "org-h-bkk", "type": "hospital", "name": "曼谷示例教学医院"},
+    {"id": "org-h-hn", "type": "hospital", "name": "河内示例心脏中心"},
+    {"id": "org-h-jkt", "type": "hospital", "name": "雅加达示例综合医院"},
+    {"id": "org-agent-th", "type": "agent", "name": "曼谷示例医疗注册代理有限公司"},
+    {"id": "org-agent-vn", "type": "agent", "name": "河内示例合规服务有限公司"},
+    {"id": "org-agent-id", "type": "agent", "name": "雅加达示例医疗器械代理有限公司"},
+    {"id": "org-dist-th", "type": "distributor", "name": "曼谷示例医疗器械经销有限公司"},
+    {"id": "org-partner", "type": "partner", "name": "曼谷示例注册咨询合伙机构"}
+  ],
+  "products": [
+    {
+      "id": "prd-ctffr",
+      "owner_org": "org-a",
+      "name": "冠脉血流储备分数计算软件",
+      "model": "CT-FFR Pro V2.1",
+      "type": "独立软件（SaMD）",
+      "indications": [
+        {"id": "ind-stable", "label": "稳定型冠心病无创功能学评估", "status": "active"},
+        {"id": "ind-acute", "label": "急性冠脉综合征辅助评估", "status": "active", "since": "2026-05-15"}
+      ],
+      "manufacturing_sites": [
+        {"id": "site-nn", "label": "南宁高新区软件研发中心", "status": "active"}
+      ]
+    },
+    {
+      "id": "prd-ecg",
+      "owner_org": "org-a",
+      "name": "可穿戴动态心电记录仪",
+      "model": "ECG-Patch S1",
+      "type": "有源医疗器械",
+      "indications": [
+        {"id": "ind-arr", "label": "心律失常长程监测", "status": "active"}
+      ],
+      "manufacturing_sites": [
+        {"id": "site-nn-factory", "label": "南宁生产基地", "status": "decommissioned", "until": "2026-08-31"},
+        {"id": "site-qz", "label": "钦州港生产基地", "status": "active", "since": "2026-09-01"}
+      ]
+    },
+    {
+      "id": "prd-peer",
+      "owner_org": "org-b",
+      "name": "一次性使用压力延长管",
+      "model": "PT-150",
+      "type": "无源医疗器械",
+      "indications": [
+        {"id": "ind-inf", "label": "介入手术压力监测通路", "status": "active"}
+      ],
+      "manufacturing_sites": [
+        {"id": "site-sz", "label": "苏州生产基地", "status": "active"}
+      ]
+    }
+  ],
+  "paths": [
+    {"id": "path-ctffr-th", "product": "prd-ctffr", "country": "TH", "classification": "Class 3（依据 REG-TH-CLS 软件规则）", "route": "Full CSDT 全套技术文档审评", "regulation_refs": ["REG-TH-ACT", "REG-TH-CLS"]},
+    {"id": "path-ctffr-vn", "product": "prd-ctffr", "country": "VN", "classification": "Class C（依据 REG-VN-98 第 6 条）", "route": "C 类注册证（số lưu hành）申报", "regulation_refs": ["REG-VN-98", "REG-VN-LBL"]},
+    {"id": "path-ctffr-id", "product": "prd-ctffr", "country": "ID", "classification": "Kelas C（依据 REG-ID-863 风险分级）", "route": "AKL 电子申报", "regulation_refs": ["REG-ID-863", "REG-ID-AKL"]},
+    {"id": "path-ecg-th", "product": "prd-ecg", "country": "TH", "classification": "Class 2", "route": "Listing 备案", "regulation_refs": ["REG-TH-ACT", "REG-TH-CLS"]},
+    {"id": "path-peer-vn", "product": "prd-peer", "country": "VN", "classification": "Class B", "route": "B 类备案", "regulation_refs": ["REG-VN-98"]}
+  ],
+  "artifacts": [
+    {
+      "id": "art-iso",
+      "type": "certificate",
+      "title": "ISO 13485:2016 医疗器械质量管理体系证书",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr", "prd-ecg"], "countries": ["TH", "VN", "ID"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2021-05-20", "valid_until": "2024-05-19", "scope_note": "覆盖南宁软件研发中心与南宁生产基地"},
+        {"version": "v2", "issued_on": "2024-05-20", "valid_until": "2027-05-19", "scope_note": "覆盖南宁软件研发中心与南宁生产基地（钦州港基地增项审核中）"}
+      ]
+    },
+    {
+      "id": "art-cfs",
+      "type": "certificate",
+      "title": "中国医疗器械出口销售证明（CFS）",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["TH", "VN", "ID"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2023-03-01", "valid_until": "2025-02-28"},
+        {"version": "v2", "issued_on": "2024-12-01", "valid_until": "2026-11-30"}
+      ]
+    },
+    {
+      "id": "art-id-license",
+      "type": "certificate",
+      "title": "印尼医疗器械注册证（Izin Edar AKL）",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["ID"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2026-03-15", "valid_until": "2031-03-14", "scope_note": "批准适应症：稳定型冠心病无创功能学评估"}
+      ]
+    },
+    {
+      "id": "art-clin-ctffr",
+      "type": "clinical",
+      "title": "CT-FFR 多中心前瞻性临床试验报告",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["TH", "VN", "ID"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2024-06-30", "scope_note": "仅覆盖稳定型冠心病适应症"},
+        {"version": "v2", "issued_on": "2026-05-15", "scope_note": "新增急性冠脉综合征队列数据"}
+      ]
+    },
+    {
+      "id": "art-clin-vn",
+      "type": "clinical",
+      "title": "越南本地临床评价资料",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["VN"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2026-08-20", "status": "draft", "scope_note": "河内示例心脏中心伦理审查中"}
+      ]
+    },
+    {
+      "id": "art-label-th",
+      "type": "label",
+      "title": "泰文标签与说明书",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["TH"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2025-10-10", "language": "th", "scope_note": "仅稳定型冠心病适应症"},
+        {"version": "v2", "issued_on": "2026-07-15", "language": "th", "scope_note": "同步急性冠脉综合征适应症"}
+      ]
+    },
+    {
+      "id": "art-label-vn",
+      "type": "label",
+      "title": "越南文标签与说明书",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["VN"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2026-05-20", "language": "vi", "scope_note": "按 111/2021/ND-CP 标签要素排版"}
+      ]
+    },
+    {
+      "id": "art-label-id",
+      "type": "label",
+      "title": "印尼文标签与说明书",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["ID"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2026-02-01", "language": "id", "scope_note": "与 AKL 批准内容一致"}
+      ]
+    },
+    {
+      "id": "art-label-ecg-th",
+      "type": "label",
+      "title": "ECG 泰文标签",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ecg"], "countries": ["TH"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2025-06-01", "language": "th"}
+      ]
+    },
+    {
+      "id": "art-hosp-nn",
+      "type": "hospital",
+      "title": "广西示例附属医院科研合作协议",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["TH", "VN", "ID"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2025-01-15", "valid_until": "2027-01-14", "scope_note": "真实世界数据收集与研究者培训"}
+      ]
+    },
+    {
+      "id": "art-hosp-bkk",
+      "type": "hospital",
+      "title": "曼谷示例教学医院临床评价合作备忘录",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["TH"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2025-11-01", "valid_until": "2026-10-31"}
+      ]
+    },
+    {
+      "id": "art-hosp-hn",
+      "type": "hospital",
+      "title": "河内示例心脏中心伦理批件",
+      "owner_org": "org-a",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["VN"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2026-07-01", "valid_until": "2027-06-30"}
+      ]
+    },
+    {
+      "id": "art-dist-th",
+      "type": "distribution",
+      "title": "泰国二类医疗器械经销资质证书",
+      "owner_org": "org-dist-th",
+      "applies_to": {"products": ["prd-ecg"], "countries": ["TH"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2024-04-01", "valid_until": "2027-03-31"}
+      ]
+    },
+    {
+      "id": "art-proc-th",
+      "type": "procurement",
+      "title": "泰国曼谷都会区 2026 年医用软件集中采购目录申报机会",
+      "owner_org": "org-gx",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["TH"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2026-09-01", "valid_until": "2026-10-15", "scope_note": "申报窗口 2026-09-01 至 2026-10-15"}
+      ]
+    },
+    {
+      "id": "art-proc-id",
+      "type": "procurement",
+      "title": "印尼国家电子目录（e-Katalog）入驻机会",
+      "owner_org": "org-gx",
+      "applies_to": {"products": ["prd-ctffr"], "countries": ["ID"]},
+      "versions": [
+        {"version": "v1", "issued_on": "2026-08-01", "valid_until": "2026-12-31", "scope_note": "需持证产品与有效本地代理"}
+      ]
+    }
+  ],
+  "applications": [
+    {
+      "id": "app-ctffr-th",
+      "product": "prd-ctffr",
+      "country": "TH",
+      "path": "path-ctffr-th",
+      "stage": "filing",
+      "submitted_on": "2026-04-10",
+      "dossier": [
+        {"artifact": "art-iso", "version": "v2"},
+        {"artifact": "art-cfs", "version": "v2"},
+        {"artifact": "art-clin-ctffr", "version": "v2"},
+        {"artifact": "art-label-th", "version": "v2"},
+        {"artifact": "art-hosp-bkk", "version": "v1"}
+      ],
+      "agent_org": "org-agent-th",
+      "stage_history": [
+        {"stage": "lead", "at": "2025-11-20"},
+        {"stage": "filing", "at": "2026-04-10"}
+      ]
+    },
+    {
+      "id": "app-ctffr-vn",
+      "product": "prd-ctffr",
+      "country": "VN",
+      "path": "path-ctffr-vn",
+      "stage": "lead",
+      "dossier": [
+        {"artifact": "art-clin-ctffr", "version": "v1"},
+        {"artifact": "art-iso", "version": "v2"}
+      ],
+      "agent_org": "org-agent-vn",
+      "stage_history": [
+        {"stage": "lead", "at": "2026-08-05"}
+      ]
+    },
+    {
+      "id": "app-ctffr-id",
+      "product": "prd-ctffr",
+      "country": "ID",
+      "path": "path-ctffr-id",
+      "stage": "approved",
+      "submitted_on": "2025-09-01",
+      "approved_on": "2026-03-15",
+      "dossier": [
+        {"artifact": "art-iso", "version": "v2"},
+        {"artifact": "art-cfs", "version": "v2"},
+        {"artifact": "art-clin-ctffr", "version": "v1"},
+        {"artifact": "art-label-id", "version": "v1"}
+      ],
+      "agent_org": "org-agent-id",
+      "stage_history": [
+        {"stage": "lead", "at": "2025-03-10"},
+        {"stage": "filing", "at": "2025-09-01"},
+        {"stage": "approved", "at": "2026-03-15"}
+      ]
+    },
+    {
+      "id": "app-ecg-th",
+      "product": "prd-ecg",
+      "country": "TH",
+      "path": "path-ecg-th",
+      "stage": "in_use",
+      "submitted_on": "2025-05-20",
+      "approved_on": "2025-08-30",
+      "dossier": [
+        {"artifact": "art-iso", "version": "v2"},
+        {"artifact": "art-label-ecg-th", "version": "v1"},
+        {"artifact": "art-dist-th", "version": "v1"}
+      ],
+      "agent_org": "org-agent-th",
+      "stage_history": [
+        {"stage": "lead", "at": "2025-02-01"},
+        {"stage": "filing", "at": "2025-05-20"},
+        {"stage": "approved", "at": "2025-08-30"},
+        {"stage": "in_use", "at": "2026-01-15"}
+      ]
+    },
+    {
+      "id": "app-peer-vn",
+      "product": "prd-peer",
+      "country": "VN",
+      "path": "path-peer-vn",
+      "stage": "filing",
+      "submitted_on": "2026-07-22",
+      "dossier": [],
+      "agent_org": "org-agent-vn",
+      "stage_history": [
+        {"stage": "lead", "at": "2026-05-11"},
+        {"stage": "filing", "at": "2026-07-22"}
+      ]
+    }
+  ],
+  "authorizations": [
+    {"org": "org-agent-th", "artifact": "art-label-th", "granted_on": "2025-10-12", "status": "active"},
+    {"org": "org-agent-th", "artifact": "art-hosp-bkk", "granted_on": "2025-11-05", "status": "active"},
+    {"org": "org-agent-vn", "artifact": "art-label-vn", "granted_on": "2026-05-22", "status": "active"},
+    {"org": "org-agent-vn", "artifact": "art-hosp-hn", "granted_on": "2026-07-02", "status": "active"},
+    {"org": "org-agent-id", "artifact": "art-label-id", "granted_on": "2026-02-02", "status": "active"},
+    {"org": "org-agent-id", "artifact": "art-id-license", "granted_on": "2026-03-16", "status": "active"},
+    {"org": "org-agent-id", "artifact": "art-cfs", "granted_on": "2025-09-01", "status": "revoked", "revoked_on": "2026-09-20"},
+    {"org": "org-dist-th", "artifact": "art-dist-th", "granted_on": "2024-04-05", "status": "active"},
+    {"org": "org-h-bkk", "artifact": "art-hosp-bkk", "granted_on": "2025-11-05", "status": "active"},
+    {"org": "org-h-hn", "artifact": "art-hosp-hn", "granted_on": "2026-07-02", "status": "active"},
+    {"org": "org-h-nn", "artifact": "art-hosp-nn", "granted_on": "2025-01-20", "status": "active"},
+    {"org": "org-partner", "artifact": "art-clin-ctffr", "granted_on": "2025-08-01", "status": "active"}
+  ],
+  "actions": [
+    {
+      "id": "act-001",
+      "kind": "supplement",
+      "application": "app-ctffr-th",
+      "title": "补充泰文标签 v2 与急性适应症说明书一致性声明",
+      "owner": {"org": "org-a", "person": "梁工（注册专员）"},
+      "due_on": "2026-10-09",
+      "status": "open",
+      "opened_on": "2026-09-18"
+    },
+    {
+      "id": "act-002",
+      "kind": "rejection",
+      "application": "app-ctffr-th",
+      "title": "临床综述未引用最新版报告被审评退回",
+      "owner": {"org": "org-gx", "person": "黄老师（法规顾问）"},
+      "due_on": "2026-09-20",
+      "status": "open",
+      "opened_on": "2026-09-05"
+    },
+    {
+      "id": "act-003",
+      "kind": "rejection",
+      "application": "app-ctffr-th",
+      "title": "合作方误用临床报告 v1 提交被形式审查驳回",
+      "owner": {"org": "org-partner", "person": "合伙人 A"},
+      "due_on": "2026-06-10",
+      "status": "resolved",
+      "opened_on": "2026-06-01",
+      "resolved_on": "2026-06-08",
+      "resolution": "撤回旧版申报，改用临床报告 v2 重新提交"
+    },
+    {
+      "id": "act-004",
+      "kind": "todo",
+      "application": "app-ctffr-vn",
+      "title": "完成越南本地临床评价资料定稿并启动申报",
+      "owner": {"org": "org-a", "person": "梁工（注册专员）"},
+      "due_on": "2026-10-31",
+      "status": "open",
+      "opened_on": "2026-08-20"
+    },
+    {
+      "id": "act-005",
+      "kind": "todo",
+      "application": "app-ctffr-id",
+      "title": "提交印尼 AKL 上市后年度监测报告",
+      "owner": {"org": "org-agent-id", "person": "代理合规专员"},
+      "due_on": "2026-11-30",
+      "status": "open",
+      "opened_on": "2026-09-01"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "dec-001",
+      "application": "app-ctffr-vn",
+      "kind": "准入路径评估",
+      "decided_on": "2026-08-05",
+      "decided_by": "org-gx",
+      "outcome": "按 Class C 路径准备，待本地临床资料定稿后申报",
+      "evidence": [
+        {"artifact": "art-clin-ctffr", "version": "v2"},
+        {"artifact": "art-iso", "version": "v2"}
+      ]
+    },
+    {
+      "id": "dec-002",
+      "application": "app-ctffr-th",
+      "kind": "申报受理",
+      "decided_on": "2026-04-10",
+      "decided_by": "org-agent-th",
+      "outcome": "Thai FDA 受理，进入技术审评",
+      "evidence": [
+        {"artifact": "art-clin-ctffr", "version": "v1"},
+        {"artifact": "art-label-th", "version": "v1"},
+        {"artifact": "art-cfs", "version": "v2"}
+      ]
+    },
+    {
+      "id": "dec-003",
+      "application": "app-ctffr-id",
+      "kind": "注册批准",
+      "decided_on": "2026-03-15",
+      "decided_by": "org-gx",
+      "outcome": "获 AKL 注册证，批准适应症为稳定型冠心病",
+      "evidence": [
+        {"artifact": "art-clin-ctffr", "version": "v1"},
+        {"artifact": "art-iso", "version": "v2"},
+        {"artifact": "art-cfs", "version": "v2"},
+        {"artifact": "art-label-id", "version": "v1"}
+      ]
+    },
+    {
+      "id": "dec-005",
+      "application": "app-ctffr-th",
+      "kind": "补充申报形式审查",
+      "decided_on": "2026-06-05",
+      "decided_by": "org-partner",
+      "outcome": "合作方渠道补充申报被形式审查退回：临床报告为已作废的 v1",
+      "evidence": [
+        {"artifact": "art-clin-ctffr", "version": "v1"}
+      ]
+    },
+    {
+      "id": "dec-004",
+      "application": "app-ecg-th",
+      "kind": "投入使用核准",
+      "decided_on": "2026-01-15",
+      "decided_by": "org-gx",
+      "outcome": "经销资质齐备，进入曼谷都会区医院使用",
+      "evidence": [
+        {"artifact": "art-dist-th", "version": "v1"},
+        {"artifact": "art-iso", "version": "v2"}
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "evt-indication",
+      "type": "indication_change",
+      "product": "prd-ctffr",
+      "occurred_on": "2026-05-15",
+      "summary": "CT-FFR 新增急性冠脉综合征辅助评估适应症（临床报告 v2 支持）"
+    },
+    {
+      "id": "evt-cfs-expiry",
+      "type": "certificate_expiry",
+      "artifact": "art-cfs",
+      "occurred_on": "2026-09-27",
+      "summary": "CFS 证书 v2 将于 2026-11-30 到期"
+    },
+    {
+      "id": "evt-site-change",
+      "type": "site_change",
+      "product": "prd-ecg",
+      "occurred_on": "2026-09-01",
+      "summary": "ECG 生产场地由南宁生产基地迁至钦州港生产基地"
+    },
+    {
+      "id": "evt-agent-end",
+      "type": "agent_termination",
+      "org": "org-agent-id",
+      "occurred_on": "2026-09-20",
+      "summary": "与雅加达示例医疗器械代理有限公司终止合作，授权同步收回"
+    }
   ]
 }

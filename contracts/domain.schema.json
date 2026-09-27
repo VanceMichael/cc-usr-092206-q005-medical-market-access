@@ -11,39 +11,262 @@
     "constraints"
   ],
   "properties": {
-    "domain": {
-      "type": "string",
-      "minLength": 1
-    },
-    "version": {
-      "type": "integer",
-      "minimum": 1
-    },
-    "sample_id": {
-      "type": "string",
-      "minLength": 1
-    },
-    "actors": {
-      "type": "array",
-      "minItems": 2,
-      "items": {
-        "type": "string"
-      }
-    },
-    "facts": {
-      "type": "array",
-      "minItems": 2,
-      "items": {
-        "type": "string"
-      }
-    },
-    "constraints": {
-      "type": "array",
-      "minItems": 2,
-      "items": {
-        "type": "string"
-      }
-    }
+    "domain": {"type": "string", "minLength": 1},
+    "version": {"type": "integer", "minimum": 1},
+    "sample_id": {"type": "string", "minLength": 1},
+    "actors": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+    "facts": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+    "constraints": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+    "pipeline_stages": {"$ref": "#/$defs/stages"},
+    "countries": {"type": "array", "items": {"$ref": "#/$defs/country"}},
+    "regulations": {"type": "array", "items": {"$ref": "#/$defs/regulation"}},
+    "organizations": {"type": "array", "items": {"$ref": "#/$defs/organization"}},
+    "products": {"type": "array", "items": {"$ref": "#/$defs/product"}},
+    "paths": {"type": "array", "items": {"$ref": "#/$defs/path"}},
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "applications": {"type": "array", "items": {"$ref": "#/$defs/application"}},
+    "authorizations": {"type": "array", "items": {"$ref": "#/$defs/authorization"}},
+    "actions": {"type": "array", "items": {"$ref": "#/$defs/action"}},
+    "decisions": {"type": "array", "items": {"$ref": "#/$defs/decision"}},
+    "events": {"type": "array", "items": {"$ref": "#/$defs/event"}}
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "$defs": {
+    "stages": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "order", "description"],
+        "properties": {
+          "id": {"enum": ["lead", "filing", "approved", "in_use"]},
+          "name": {"type": "string", "minLength": 1},
+          "order": {"type": "integer", "minimum": 1},
+          "description": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "country": {
+      "type": "object",
+      "required": ["id", "name", "regulator", "label_language", "local_agent_required"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "regulator": {"type": "string", "minLength": 1},
+        "label_language": {"type": "string", "minLength": 1},
+        "local_agent_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "regulation": {
+      "type": "object",
+      "required": ["id", "country", "title", "citation"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "country": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "citation": {"type": "string", "minLength": 1},
+        "source_url": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "organization": {
+      "type": "object",
+      "required": ["id", "type", "name"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"enum": ["service_org", "enterprise", "hospital", "agent", "distributor", "partner"]},
+        "name": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "indication": {
+      "type": "object",
+      "required": ["id", "label", "status"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string"},
+        "status": {"enum": ["active", "withdrawn"]},
+        "since": {"type": "string"},
+        "until": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "site": {
+      "type": "object",
+      "required": ["id", "label", "status"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string"},
+        "status": {"enum": ["active", "decommissioned"]},
+        "since": {"type": "string"},
+        "until": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "product": {
+      "type": "object",
+      "required": ["id", "owner_org", "name", "model", "type", "indications", "manufacturing_sites"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "owner_org": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "model": {"type": "string"},
+        "type": {"type": "string"},
+        "indications": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/indication"}},
+        "manufacturing_sites": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/site"}}
+      },
+      "additionalProperties": false
+    },
+    "path": {
+      "type": "object",
+      "required": ["id", "product", "country", "classification", "route", "regulation_refs"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "product": {"type": "string", "minLength": 1},
+        "country": {"type": "string", "minLength": 1},
+        "classification": {"type": "string"},
+        "route": {"type": "string"},
+        "regulation_refs": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["products", "countries"],
+      "properties": {
+        "products": {"type": "array", "items": {"type": "string"}},
+        "countries": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "artifact_version": {
+      "type": "object",
+      "required": ["version", "issued_on"],
+      "properties": {
+        "version": {"type": "string", "minLength": 1},
+        "issued_on": {"type": "string"},
+        "valid_until": {"type": ["string", "null"]},
+        "status": {"enum": ["draft", "final"]},
+        "language": {"type": "string"},
+        "scope_note": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["id", "type", "title", "owner_org", "applies_to", "versions"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"enum": ["certificate", "clinical", "label", "hospital", "distribution", "procurement"]},
+        "title": {"type": "string", "minLength": 1},
+        "owner_org": {"type": "string"},
+        "applies_to": {"$ref": "#/$defs/scope"},
+        "versions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/artifact_version"}}
+      },
+      "additionalProperties": false
+    },
+    "dossier_entry": {
+      "type": "object",
+      "required": ["artifact", "version"],
+      "properties": {
+        "artifact": {"type": "string"},
+        "version": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "stage_entry": {
+      "type": "object",
+      "required": ["stage", "at"],
+      "properties": {
+        "stage": {"enum": ["lead", "filing", "approved", "in_use"]},
+        "at": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "application": {
+      "type": "object",
+      "required": ["id", "product", "country", "path", "stage", "dossier", "stage_history"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "product": {"type": "string"},
+        "country": {"type": "string"},
+        "path": {"type": "string"},
+        "stage": {"enum": ["lead", "filing", "approved", "in_use"]},
+        "submitted_on": {"type": "string"},
+        "approved_on": {"type": "string"},
+        "dossier": {"type": "array", "items": {"$ref": "#/$defs/dossier_entry"}},
+        "agent_org": {"type": "string"},
+        "stage_history": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/stage_entry"}}
+      },
+      "additionalProperties": false
+    },
+    "authorization": {
+      "type": "object",
+      "required": ["org", "artifact", "granted_on", "status"],
+      "properties": {
+        "org": {"type": "string"},
+        "artifact": {"type": "string"},
+        "granted_on": {"type": "string"},
+        "status": {"enum": ["active", "revoked"]},
+        "revoked_on": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "owner": {
+      "type": "object",
+      "required": ["org", "person"],
+      "properties": {
+        "org": {"type": "string"},
+        "person": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "action": {
+      "type": "object",
+      "required": ["id", "kind", "application", "title", "owner", "due_on", "status", "opened_on"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"enum": ["supplement", "rejection", "todo"]},
+        "application": {"type": "string"},
+        "title": {"type": "string"},
+        "owner": {"$ref": "#/$defs/owner"},
+        "due_on": {"type": "string"},
+        "status": {"enum": ["open", "resolved"]},
+        "opened_on": {"type": "string"},
+        "resolved_on": {"type": "string"},
+        "resolution": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "required": ["id", "application", "kind", "decided_on", "decided_by", "outcome", "evidence"],
+      "properties": {
+        "id": {"type": "string"},
+        "application": {"type": "string"},
+        "kind": {"type": "string"},
+        "decided_on": {"type": "string"},
+        "decided_by": {"type": "string"},
+        "outcome": {"type": "string"},
+        "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/dossier_entry"}}
+      },
+      "additionalProperties": false
+    },
+    "event": {
+      "type": "object",
+      "required": ["id", "type", "occurred_on", "summary"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"enum": ["certificate_expiry", "indication_change", "site_change", "agent_termination"]},
+        "product": {"type": "string"},
+        "artifact": {"type": "string"},
+        "org": {"type": "string"},
+        "occurred_on": {"type": "string"},
+        "summary": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  }
 }
